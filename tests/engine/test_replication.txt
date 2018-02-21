@@ -1,0 +1,81 @@
+"" Creating entities...
+
+enable LWW
+
+  create Client A/B, Node 1/2/3
+  clock tick .001
+  Node 1 time 42.004
+  Node 2 time 42.000
+  Node 3 time 42.001
+
+"" Initial assignment: x=2 on Node 1, then Node 2 with delay 4, Node 3 with delay 1
+
+  Client A set x=2 on Node 1
+    replicate :4: Node 2
+    replicate :1: Node 3
+
+  verify time Node 1 42.004
+  verify x.value Node 1 2
+  verify x.timestamp Node 1 42.004
+  verify replication Node 1 0
+  verify time Node 2 42.000
+  verify x Node 2 undefined
+  verify replication Node 2 1
+  verify time Node 3 42.001
+  verify x Node 3 undefined
+  verify replication Node 3 1
+
+tick
+  verify time Node 1 42.005
+  verify x.value Node 1 2
+  verify x.timestamp Node 1 42.004
+  verify replication Node 1 0
+  verify time Node 2 42.001
+  verify x Node 2 undefined
+  verify replication Node 2 1
+  verify time Node 3 42.002
+  verify x.value Node 3 2
+  verify x.timestamp Node 3 42.004
+  verify replication Node 3 0
+
+tick
+  verify time Node 1 42.006
+  verify x.value Node 1 2
+  verify x.timestamp Node 1 42.004
+  verify replication Node 1 0
+  verify time Node 2 42.002
+  verify x Node 2 undefined
+  verify replication Node 2 1
+  verify time Node 3 42.003
+  verify x.value Node 3 2
+  verify x.timestamp Node 3 42.004
+  verify replication Node 3 0
+
+  tick
+    verify time Node 1 42.007
+    verify x.value Node 1 2
+    verify x.timestamp Node 1 42.004
+    verify replication Node 1 0
+    verify time Node 2 42.003
+    verify x Node 2 undefined
+    verify replication Node 2 1
+    verify time Node 3 42.004
+    verify x.value Node 3 2
+    verify x.timestamp Node 3 42.004
+    verify replication Node 3 0
+
+tick
+    verify time Node 1 42.008
+    verify x.value Node 1 2
+    verify x.timestamp Node 1 42.004
+    verify replication Node 1 0
+    verify time Node 2 42.004
+    verify x.value Node 2 2
+    verify x.timestamp Node 2 42.004
+    verify replication Node 2 0
+    verify time Node 3 42.005
+    verify x.value Node 3 2
+    verify x.timestamp Node 3 42.004
+    verify replication Node 3 0
+
+X

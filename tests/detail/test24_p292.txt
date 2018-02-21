@@ -1,0 +1,85 @@
+#
+#  This sequence demonstrates the problem with LWW when clocks on different
+#  nodes are NOT identical.  In practice this is impossible, best Google can do
+#  is 7ms time window between nodes.
+#
+#  The system invariant is that when replication is complete, all nodes have the
+#  same value for a given key.
+#
+#  LWW requires the following:
+#  - key/value starting timestamp is from Node that first created the key/pair.
+#  - a key/value/timestamp setting only occurs if timestamp is later than existing one
+#
+enable LWW
+
+  create Client A/B, Node 1/2/3
+  clock tick .001
+  Node 1 time 42.003
+  Node 2 time 41.999
+  Node 3 time 42.000
+  tick
+"" Client A sets x=2@42.004 on Node 1, replicates to 2 in 4 ticks, replicates to 3 in 1 tick
+  Client A set x=2 on Node 1
+    replicate :4: Node 2
+    replicate :1: Node 3
+"" Verify initial conditions
+  verify time Node 1 42.004
+  verify x.value Node 1 2
+  verify x.timestamp Node 1 42.004
+  verify time Node 2 42.000
+  verify x Node 2 undefined
+  verify replication Node 2 1
+  verify time Node 3 42.001
+  verify x Node 3 undefined
+  verify replication Node 3 1
+
+tick
+tick
+"" Verify expected state after two ticks
+  verify time Node 1 42.006
+  verify x.value Node 1 2
+  verify x.timestamp Node 1 42.004
+  verify time Node 2 42.002
+  verify x Node 2 undefined
+  verify replication Node 2 1
+  verify time Node 3 42.003
+  verify x.value Node 3 2
+  verify x.timestamp Node 3 42.004
+  verify replication Node 3 0
+
+"" Client B sets x=1 on Node 3, replicates to Nodes 1 & 2 in 1 tick
+
+Client B set x=1 on Node 3
+  replicate :1: Node 1
+  replicate :1: Node 2
+
+"" verify replications recorded
+verify replication Node 1 1
+verify replication Node 2 2
+verify replication Node 3 0
+
+tick
+
+"" After tick, Node 2 should have attempted to set x=1
+verify replication Node 2 1
+verify x.value Node 2 1
+verify x.timestamp Node 2 42.003
+verify time Node 2 42.003
+
+"" Node 1 should have done the same
+"" EXPECTING FAILURE due to incorrectly identified last for LWW
+verify replication Node 1 0
+verify x.value Node 1 1
+verify time Node 1 42.007
+
+tick
+verify replication Node 1 0
+verify replication Node 2 0
+verify replication Node 3 0
+
+"" EXPECTING FAILURE due to incorrectly identified last for LWW
+verify x.value Node 2 1
+verify x.timestamp Node 2 42.003
+verify time Node 2 42.003
+
+X

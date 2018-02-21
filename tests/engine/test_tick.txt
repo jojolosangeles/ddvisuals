@@ -1,0 +1,30 @@
+"" Testing that when an entity clock ticks, the time actually moves up one unit
+""
+""   Create the entities
+  create Client A/B, Node 1/2/3
+  clock tick .001
+  Node 1 time 42.003
+  Node 2 time 42.002
+  Node 3 time 42.000
+
+""   Verify Node initial clock setting has expected value
+
+  verify time Node 1 42.003
+  verify time Node 2 42.002
+  verify time Node 3 42.000
+
+""   Tick the clock, verify all node clocks increased by one unit
+
+  tick
+  verify time Node 1 42.004
+  verify time Node 2 42.003
+  verify time Node 3 42.001
+
+""   Tick the clock, verify all node clocks increased by one unit
+
+  tick
+  verify time Node 1 42.005
+  verify time Node 2 42.004
+  verify time Node 3 42.002
+
+X

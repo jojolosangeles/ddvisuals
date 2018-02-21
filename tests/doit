@@ -1,0 +1,8 @@
+echo "generating messages for rabbitMQ from $1.txt"
+ruby ../dsl2rabbitmq/text2json.rb $1.txt
+if [ "$#" -eq 2 ] && [ "$2" != "verify" ]; then
+  echo "messages in rabbitmq, skipping node"
+else
+  echo "processing rabbitMQ messages with node"
+  node ../qprocessor/run_processor.js group
+fi

@@ -1,0 +1,3 @@
+./doit engine/test_assignment
+./doit engine/test_replication
+./doit engine/test_tick
