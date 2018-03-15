@@ -1,0 +1,5 @@
+entities: Lock service, Client 1/2, Storage
+
+Client 1 get lease on Lock service
+    lock held by client 1 :4:
+    replicate :1: Node 3

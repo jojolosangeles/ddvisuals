@@ -126,7 +126,7 @@ function processCommand(obj) {
       clock.tick();
       entityManager.tick(processCommand)
     }
-  } else if (obj.command == "enable") {
+  } else if (obj.command == "using") {
     if (obj.featureName == "LWW") {
       lwwEnabled = true;
     }

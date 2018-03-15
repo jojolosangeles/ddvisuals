@@ -63,7 +63,7 @@ lines.each do |line|
     end
     outQ.send("{'command':'echo','message':'#{messageText}'}")
   end
-  if (data[0] == "create") then
+  if (data[0] == "entities") then
     scan = 1
     while (scan < data.length) do
       entityType,entityNames,offset = entityCreator.entityListBreakdown(data[scan], data[scan+1])
@@ -72,7 +72,7 @@ lines.each do |line|
       end
       scan += offset
     end
-  elsif ((data[0] == "enable") || (data[0] == "disable")) then
+  elsif ((data[0] == "using") || (data[0] == "disable")) then
     outQ.send("{'command':'#{data[0]}','featureName':'#{data[1]}'}")
   elsif (data[0] == "clock") then
     outQ.send("{'command':'clock','tickDuration':'#{data[2]}'}")

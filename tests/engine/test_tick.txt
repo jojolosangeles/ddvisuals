@@ -1,7 +1,7 @@
 "" Testing that when an entity clock ticks, the time actually moves up one unit
 ""
 ""   Create the entities
-  create Client A/B, Node 1/2/3
+  entities Client A/B, Node 1/2/3
   clock tick .001
   Node 1 time 42.003
   Node 2 time 42.002

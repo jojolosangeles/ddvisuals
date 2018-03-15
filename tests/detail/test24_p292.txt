@@ -10,18 +10,22 @@
 #  - key/value starting timestamp is from Node that first created the key/pair.
 #  - a key/value/timestamp setting only occurs if timestamp is later than existing one
 #
-enable LWW
+using LWW
 
-  create Client A/B, Node 1/2/3
-  clock tick .001
-  Node 1 time 42.003
-  Node 2 time 41.999
-  Node 3 time 42.000
-  tick
-"" Client A sets x=2@42.004 on Node 1, replicates to 2 in 4 ticks, replicates to 3 in 1 tick
-  Client A set x=2 on Node 1
-    replicate :4: Node 2
-    replicate :1: Node 3
+clock tick .001
+entities Client A/B, Node 1/2/3
+
+# set the clocks, verify tick works
+Node 1 time 42.003
+Node 2 time 41.999
+Node 3 time 42.000
+tick
+
+"" Client A sets x=2, time 42.004 on Node 1, replicates to 2 in 4 ticks, replicates to 3 in 1 tick
+Client A set x=2 on Node 1
+  replicate :4: Node 2
+  replicate :1: Node 3
+
 "" Verify initial conditions
   verify time Node 1 42.004
   verify x.value Node 1 2

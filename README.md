@@ -7,9 +7,13 @@ Scenarios from [Designing Data-Intensive Applications](https://www.amazon.com/De
 
 ## Scenarios in "tests" folder
 
-rabbitmq needs to be running.
+First, start rabbitmq:  rabbitmq-server
 
-test scripts:  doengine, dodetail, dominimal
+On OSX, its installed in /usr/local/sbin, so you need this in your path: PATH=$PATH:/usr/local/sbin
+
+Once its started, these scripts run sender/receiver.
+
+The test scripts:  doengine, dodetail, dominimal
 
 These take activity description, create events send to rabbitmq, separate program
 reads these events.

@@ -1,9 +1,9 @@
 # page 292
 
-enable LWW
+using LWW
 
 "" Create entities
-create Client A/B, Node 1/2/3
+entities Client A/B, Node 1/2/3
 clock tick .001
 Node 1 time 42.004
 Node 2 time 42.000
